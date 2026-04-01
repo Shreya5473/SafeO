@@ -359,3 +359,21 @@ INFO:     127.0.0.1:59283 - "POST /waf/input HTTP/1.1" 200 OK
 INFO:     127.0.0.1:59286 - "POST /waf/input HTTP/1.1" 200 OK
 INFO:     127.0.0.1:59291 - "POST /waf/input HTTP/1.1" 200 OK
 INFO:     127.0.0.1:59297 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59431 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59434 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59437 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59440 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59441 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59446 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59447 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59452 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59455 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59460 - "POST /waf/input HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'odoo/addons/workshop/securec_odoo/models/securec_log.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [42563]
+INFO:     Started server process [46186]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.

@@ -28,7 +28,7 @@ class SecureCEvent(models.Model):
     user_id = fields.Many2one(
         'res.users',
         string='User',
-        default=lambda self: self.env.user,
+        default=lambda self: self.env.uid,
         index=True,
         ondelete='set null',
     )

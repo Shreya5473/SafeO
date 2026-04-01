@@ -33,7 +33,7 @@ class SecureCLog(models.Model):
     detected_patterns = fields.Text('Detected Patterns')
     sanitized_text = fields.Text('Sanitized Input')
     timestamp = fields.Datetime('Timestamp', default=fields.Datetime.now, required=True)
-    user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.uid)
     module = fields.Char('Module', default='generic')
     jira_ticket_id = fields.Char('Jira Ticket ID')
     jira_ticket_url = fields.Char('Jira Ticket URL')
