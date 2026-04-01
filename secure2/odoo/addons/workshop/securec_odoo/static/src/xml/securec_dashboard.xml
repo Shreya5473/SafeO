@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="securec_odoo.Dashboard" owl="1">
+<div class="securec-app">
+    <div class="securec-header">
+        <div class="securec-brand">
+            <div class="securec-brand-text">
+                <h1>SafeO Security Console</h1>
+                <span>Centralized AI WAF, tiered LLM, and audit observability for Odoo</span>
+            </div>
+        </div>
+        <div class="securec-header-right">
+            <t t-if="state.activePolicy">
+                <span class="securec-region-pill">Policy: <t t-esc="activePolicyRegion()"/></span>
+            </t>
+            <div class="securec-policy-wrap">
+                <select class="securec-policy-select" t-on-change="onPolicyChange">
+                    <option value="">Select Region Policy</option>
+                    <t t-foreach="policyOptions()" t-as="p" t-key="p.id">
+                        <option t-att-value="p.id" t-att-selected="state.selectedPolicyId === p.id ? 'selected' : undefined">
+                            <t t-esc="p.label"/>
+                        </option>
+                    </t>
+                </select>
+                <span class="securec-policy-hint">auto-saved on change</span>
+            </div>
+            <button class="securec-refresh-btn" t-on-click="loadData">Refresh</button>
+        </div>
+    </div>
+
+    <div class="securec-body">
+        <div t-if="state.apiOffline" class="securec-api-warning">
+            SafeO WAF backend is offline. Dashboard is showing local Odoo fallback data.
+        </div>
+
+        <div class="securec-view-switch">
+            <button class="securec-refresh-btn" t-att-class="state.viewMode === 'dashboard' ? 'securec-refresh-btn active' : 'securec-refresh-btn'" t-on-click="switchToDashboard">Dashboard</button>
+            <button class="securec-refresh-btn" t-att-class="state.viewMode === 'attack_lab' ? 'securec-refresh-btn active' : 'securec-refresh-btn'" t-on-click="switchToAttackLab">Live Attack Lab</button>
+        </div>
+
+        <t t-if="state.viewMode !== 'attack_lab'">
+        <div class="securec-stat-grid">
+            <div class="securec-stat-card">
+                <div class="stat-info">
+                    <div class="stat-value"><t t-esc="state.metrics.total_requests"/></div>
+                    <div class="stat-label">Total Inspected Requests</div>
+                </div>
+            </div>
+            <div class="securec-stat-card">
+                <div class="stat-info">
+                    <div class="stat-value"><t t-esc="state.metrics.blocked_count"/></div>
+                    <div class="stat-label">Blocked Threats</div>
+                </div>
+            </div>
+            <div class="securec-stat-card">
+                <div class="stat-info">
+                    <div class="stat-value"><t t-esc="state.metrics.block_rate + '%'"/></div>
+                    <div class="stat-label">Block Rate</div>
+                </div>
+            </div>
+            <div class="securec-stat-card">
+                <div class="stat-info">
+                    <div class="stat-value"><t t-esc="securityScore()"/></div>
+                    <div class="stat-label">Security Score</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="securec-card securec-command-card">
+            <h3>Live security activity</h3>
+            <p class="securec-note">Unified feed: authentication, WAF, and API health events with quick recommendations.</p>
+            <div t-if="state.activityFeed.length" class="securec-feed-list">
+                <t t-foreach="state.activityFeed" t-as="row" t-key="row.id">
+                    <div t-att-class="'securec-feed-row ' + feedSeverityClass(row.severity)">
+                        <div class="securec-feed-head">
+                            <span class="securec-feed-badge" t-esc="row.badge"/>
+                            <span class="securec-feed-time" t-esc="formatTime(row.timestamp)"/>
+                        </div>
+                        <div class="securec-feed-title" t-esc="row.title"/>
+                        <div class="securec-feed-detail" t-esc="row.detail"/>
+                        <div class="securec-feed-rec"><t t-esc="row.recommendation"/></div>
+                    </div>
+                </t>
+            </div>
+            <div t-else="" class="securec-empty">No activity yet. Try a failed login or a Live Attack Lab scan.</div>
+        </div>
+
+        <div class="securec-exposure-grid">
+            <div class="securec-stat-card">
+                <div class="stat-info">
+                    <div class="stat-value">AED <t t-esc="Math.round(state.metrics.estimated_exposure_avoided_today_aed || 0)"/></div>
+                    <div class="stat-label">Estimated exposure signal (today)</div>
+                </div>
+            </div>
+            <div class="securec-stat-card">
+                <div class="stat-info">
+                    <div class="stat-value"><t t-esc="state.metrics.high_risk_users_24h || 0"/></div>
+                    <div class="stat-label">High-signal actors (24h)</div>
+                </div>
+            </div>
+            <div class="securec-stat-card">
+                <div class="stat-info">
+                    <div class="stat-value"><t t-esc="state.metrics.blocks_today_count || 0"/></div>
+                    <div class="stat-label">WAF blocks today</div>
+                </div>
+            </div>
+        </div>
+        <p class="securec-exposure-disclaimer"><t t-esc="state.metrics.exposure_disclaimer || ''"/></p>
+
+        <div class="securec-card">
+            <h3>Last 24 hours — activity mix (audit)</h3>
+            <div class="risk-bar-row">
+                <span class="risk-bar-label">Auth</span>
+                <div class="risk-bar-track"><div class="risk-bar-fill blue" t-att-style="'width:' + mixPct('auth') + '%'"/></div>
+                <span class="risk-bar-count"><t t-esc="mixCount('auth')"/></span>
+            </div>
+            <div class="risk-bar-row">
+                <span class="risk-bar-label">WAF</span>
+                <div class="risk-bar-track"><div class="risk-bar-fill red" t-att-style="'width:' + mixPct('waf') + '%'"/></div>
+                <span class="risk-bar-count"><t t-esc="mixCount('waf')"/></span>
+            </div>
+            <div class="risk-bar-row">
+                <span class="risk-bar-label">API</span>
+                <div class="risk-bar-track"><div class="risk-bar-fill yellow" t-att-style="'width:' + mixPct('api') + '%'"/></div>
+                <span class="risk-bar-count"><t t-esc="mixCount('api')"/></span>
+            </div>
+        </div>
+
+        <div class="securec-engine-timeline-grid">
+            <div class="securec-card">
+                <h3>SafeO engine efficiency (FastAPI)</h3>
+                <p class="securec-note">Tiered LLM invokes semantic scoring only in the gray band (plus a small drift sample). Repeated payloads reuse a short TTL decision cache.</p>
+                <div class="securec-engine-stats">
+                    <div class="securec-engine-stat">
+                        <div class="securec-engine-stat-val"><t t-esc="state.metrics.llm_calls_total || 0"/></div>
+                        <div class="securec-engine-stat-lbl">LLM calls</div>
+                    </div>
+                    <div class="securec-engine-stat">
+                        <div class="securec-engine-stat-val"><t t-esc="state.metrics.llm_calls_skipped || 0"/></div>
+                        <div class="securec-engine-stat-lbl">LLM skipped</div>
+                    </div>
+                    <div class="securec-engine-stat">
+                        <div class="securec-engine-stat-val"><t t-esc="state.metrics.decision_cache_hits || 0"/></div>
+                        <div class="securec-engine-stat-lbl">Cache hits</div>
+                    </div>
+                </div>
+                <p t-if="state.apiOffline" class="securec-note">Counters stay at zero while the API is offline.</p>
+            </div>
+            <div class="securec-card">
+                <h3>Last 24 hours — hourly audit timeline</h3>
+                <p class="securec-note"><t t-esc="state.metrics.timeline_note || ''"/></p>
+                <div class="securec-timeline-scroll">
+                    <t t-foreach="timelineRows()" t-as="row" t-key="row.label">
+                        <div class="securec-timeline-row">
+                            <span class="securec-timeline-lbl"><t t-esc="row.label"/></span>
+                            <div class="securec-timeline-track">
+                                <div class="securec-timeline-outer" t-att-style="'width:' + timelineBarPct(row.total) + '%'">
+                                    <div class="securec-timeline-stack" t-att-title="'auth ' + row.auth + ' waf ' + row.waf + ' api ' + row.api">
+                                        <span class="securec-timeline-seg auth" t-att-style="'width:' + timelineSegPct(row.auth, row) + '%'"/>
+                                        <span class="securec-timeline-seg waf" t-att-style="'width:' + timelineSegPct(row.waf, row) + '%'"/>
+                                        <span class="securec-timeline-seg api" t-att-style="'width:' + timelineSegPct(row.api, row) + '%'"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="securec-timeline-count"><t t-esc="row.total"/></span>
+                        </div>
+                    </t>
+                </div>
+                <div t-if="!timelineRows().length" class="securec-empty">No audit events in the last 24 hours.</div>
+            </div>
+        </div>
+
+        <div class="securec-card securec-scope-card">
+            <h3>What SafeO Is Protecting</h3>
+            <p class="securec-note"><t t-esc="state.context.scope_note or 'SafeO applies AI WAF controls to configured Odoo applications and logs all security decisions.'"/></p>
+            <div class="securec-scope-grid">
+                <div class="securec-scope-item">
+                    <span class="securec-tag">CRM</span>
+                    <span class="securec-scope-desc">All CRM contact form submissions and lead inputs — scanned for SQLi, XSS, Prompt Injection and more</span>
+                </div>
+                <div class="securec-scope-item">
+                    <span class="securec-tag">Authentication</span>
+                    <span class="securec-scope-desc">Every login, logout, and session event — captured in the Audit Trail with IP and timestamp</span>
+                </div>
+                <div class="securec-scope-item">
+                    <span class="securec-tag">Website</span>
+                    <span class="securec-scope-desc">Website contact and signup forms — WAF-scanned before submission is accepted</span>
+                </div>
+                <div class="securec-scope-item">
+                    <span class="securec-tag">Attack Lab</span>
+                    <span class="securec-scope-desc">Live test payloads you run below — same WAF engine, results appear in Security Logs immediately</span>
+                </div>
+                <div class="securec-scope-item">
+                    <span class="securec-tag">Global Monitor</span>
+                    <span class="securec-scope-desc">
+                        <t t-esc="state.context.global_monitor_enabled ? 'Enabled: scans suspicious POST/JSON payloads from installed Odoo apps and logs risky traffic.' : 'Disabled: cross-app monitor is OFF in SecureC settings.'"/>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="securec-mid-grid">
+            <div class="securec-card">
+                <h3>Risk distribution (ML buckets)</h3>
+                <p class="securec-note securec-note-tight">Share of inspected requests by heuristic risk band (same logic as the WAF scorer).</p>
+                <div class="securec-risk-pie-row">
+                    <div class="securec-risk-pie" t-att-style="riskPieStyle()" title="Low / medium / high mix"/>
+                    <div class="securec-risk-pie-side">
+                        <div class="risk-bar-row">
+                            <span class="risk-bar-label">Low</span>
+                            <div class="risk-bar-track"><div class="risk-bar-fill green" t-att-style="'width:' + riskPct('low') + '%'"/></div>
+                            <span class="risk-bar-count"><t t-esc="state.metrics.risk_distribution.low"/></span>
+                        </div>
+                        <div class="risk-bar-row">
+                            <span class="risk-bar-label">Medium</span>
+                            <div class="risk-bar-track"><div class="risk-bar-fill yellow" t-att-style="'width:' + riskPct('medium') + '%'"/></div>
+                            <span class="risk-bar-count"><t t-esc="state.metrics.risk_distribution.medium"/></span>
+                        </div>
+                        <div class="risk-bar-row">
+                            <span class="risk-bar-label">High</span>
+                            <div class="risk-bar-track"><div class="risk-bar-fill red" t-att-style="'width:' + riskPct('high') + '%'"/></div>
+                            <span class="risk-bar-count"><t t-esc="state.metrics.risk_distribution.high"/></span>
+                        </div>
+                        <div t-if="!riskPieHasData()" class="securec-empty securec-empty-inline">No scored requests yet — run Attack Lab or CRM tests.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="securec-card">
+                <h3>Language Visibility</h3>
+                <div class="lang-bar-row">
+                    <span class="lang-bar-label">English</span>
+                    <div class="lang-bar-track"><div class="lang-bar-fill-en" t-att-style="'width:' + langPct('en') + '%'"/></div>
+                    <span class="lang-bar-count"><t t-esc="langCount('en')"/></span>
+                </div>
+                <div class="lang-bar-row">
+                    <span class="lang-bar-label">Arabic</span>
+                    <div class="lang-bar-track"><div class="lang-bar-fill-ar" t-att-style="'width:' + langPct('ar') + '%'"/></div>
+                    <span class="lang-bar-count"><t t-esc="langCount('ar')"/></span>
+                </div>
+                <div class="lang-bar-row">
+                    <span class="lang-bar-label">Mixed / Arabizi</span>
+                    <div class="lang-bar-track"><div class="lang-bar-fill-mixed" t-att-style="'width:' + langPct('mixed') + '%'"/></div>
+                    <span class="lang-bar-count"><t t-esc="langCount('mixed')"/></span>
+                </div>
+            </div>
+
+            <div class="securec-card">
+                <h3>Threats by Application</h3>
+                <t t-foreach="moduleEntries()" t-as="entry" t-key="entry.name">
+                    <div class="module-bar-row">
+                        <span class="module-bar-label"><t t-esc="entry.name"/></span>
+                        <div class="module-bar-track"><div class="module-bar-fill" t-att-style="'width:' + modulePct(entry.count) + '%'"/></div>
+                        <span class="module-bar-count"><t t-esc="entry.count"/></span>
+                    </div>
+                </t>
+                <div t-if="!moduleEntries().length" class="securec-empty">No module events yet.</div>
+            </div>
+        </div>
+
+        <div class="securec-logs-card">
+            <h3>WAF Decision Logs</h3>
+            <div t-if="state.logs.length">
+                <table class="securec-table">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Application</th>
+                            <th>User</th>
+                            <th>Input</th>
+                            <th>Language</th>
+                            <th>Region</th>
+                            <th>Risk</th>
+                            <th>Decision</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="state.logs" t-as="log" t-key="log.id">
+                            <tr>
+                                <td><t t-esc="formatTime(log.timestamp)"/></td>
+                                <td><t t-esc="log.module || 'N/A'"/></td>
+                                <td><t t-esc="log.user_id ? log.user_id[1] : 'N/A'"/></td>
+                                <td><t t-esc="log.input_preview || '-'"/></td>
+                                <td><t t-esc="langLabel(log.detected_language)"/></td>
+                                <td><t t-esc="log.policy_region || '-'"/></td>
+                                <td><t t-esc="Math.round((log.risk_score || 0) * 100) + '%'"/></td>
+                                <td><span t-att-class="'decision-badge ' + log.decision"><t t-esc="(log.decision || '').toUpperCase()"/></span></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+            <div t-else="" class="securec-empty">No WAF decisions yet.</div>
+        </div>
+
+        <div class="securec-logs-card">
+            <h3>Login Activity and Audit Trail</h3>
+            <div t-if="state.auditLogs.length">
+                <table class="securec-table">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Event</th>
+                            <th>Status</th>
+                            <th>User / Login</th>
+                            <th>Application</th>
+                            <th>Route</th>
+                            <th>IP</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="state.auditLogs" t-as="a" t-key="a.id">
+                            <tr>
+                                <td><t t-esc="formatTime(a.timestamp)"/></td>
+                                <td><t t-esc="a.event_type"/></td>
+                                <td><span t-att-class="'decision-badge ' + auditStatusClass(a.status)"><t t-esc="(a.status || '').toUpperCase()"/></span></td>
+                                <td><t t-esc="a.user_id ? a.user_id[1] : (a.login || '-')"/></td>
+                                <td><t t-esc="a.application || '-'"/></td>
+                                <td><t t-esc="a.route || '-'"/></td>
+                                <td><t t-esc="a.ip_address || '-'"/></td>
+                                <td><t t-esc="a.details || '-'"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+            <div t-else="" class="securec-empty">No authentication or audit activity recorded yet.</div>
+        </div>
+
+        <div class="securec-sim-card">
+            <h3>Attack simulation</h3>
+            <p class="sim-subtitle">Runs curated payloads through the same deterministic ML scorer as the WAF core (fast; no LLM). Requires the FastAPI backend URL in Settings.</p>
+            <button class="sim-run-btn" t-att-class="state.simLoading ? 'sim-run-btn is-busy' : 'sim-run-btn'" t-on-click="runSimulation">
+                <t t-if="state.simLoading">Running simulation...</t>
+                <t t-else="">Run attack simulation</t>
+            </button>
+
+            <div t-if="state.simError" class="securec-sim-error"><t t-esc="state.simError"/></div>
+
+            <div t-if="state.simulation" class="sim-summary">
+                <div class="sim-summary-card"><div class="sim-summary-value"><t t-esc="state.simulation.total_attacks"/></div><div class="sim-summary-label">Total</div></div>
+                <div class="sim-summary-card"><div class="sim-summary-value"><t t-esc="state.simulation.detected_count"/></div><div class="sim-summary-label">Flagged</div></div>
+                <div class="sim-summary-card"><div class="sim-summary-value"><t t-esc="(state.simulation.detection_rate || 0) + '%'"/></div><div class="sim-summary-label">Rate</div></div>
+            </div>
+
+            <div t-if="state.simulation" class="sim-results-wrap">
+                <table class="securec-table securec-table-compact" t-if="simulationResults().length">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Payload</th>
+                            <th>Risk</th>
+                            <th>Decision</th>
+                            <th>Flagged</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="simulationResults()" t-as="row" t-key="row_index">
+                            <tr>
+                                <td><t t-esc="row.attack_type"/></td>
+                                <td class="sim-payload-cell"><t t-esc="row.payload"/></td>
+                                <td><t t-esc="Math.round((row.risk_score || 0) * 100) + '%'"/></td>
+                                <td><span t-att-class="'decision-badge ' + (row.decision || 'allow')"><t t-esc="(row.decision || '').toUpperCase()"/></span></td>
+                                <td t-att-class="simRowDetectedClass(row)"><t t-esc="row.detected ? 'Yes' : 'No'"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </t>
+
+        <div class="securec-sim-card securec-attack-lab-card">
+            <h3>Live Attack Lab</h3>
+            <p class="sim-subtitle">Run curated payloads in-dashboard and inspect live risk, explanation, and logs.</p>
+            <div class="securec-lab-presets">
+                <button class="securec-refresh-btn" data-preset="sqli" t-on-click="setLabPresetFromEvent">SQLi</button>
+                <button class="securec-refresh-btn" data-preset="xss" t-on-click="setLabPresetFromEvent">XSS</button>
+                <button class="securec-refresh-btn" data-preset="ssti" t-on-click="setLabPresetFromEvent">SSTI</button>
+                <button class="securec-refresh-btn" data-preset="prompt" t-on-click="setLabPresetFromEvent">Prompt</button>
+                <button class="securec-refresh-btn" data-preset="benign" t-on-click="setLabPresetFromEvent">Benign</button>
+                <button class="securec-refresh-btn" data-preset="arabic_benign" t-on-click="setLabPresetFromEvent">Arabic Benign</button>
+                <button class="securec-refresh-btn" data-preset="arabic_malicious" t-on-click="setLabPresetFromEvent">Arabic Attack</button>
+            </div>
+            <textarea class="securec-lab-input" rows="5" t-model="state.labPayload" placeholder="Paste payload here..."></textarea>
+            <div class="securec-lab-actions">
+                <button class="sim-run-btn" t-att-class="state.labRunning ? 'sim-run-btn is-busy' : 'sim-run-btn'" t-on-click="runAttackLab">
+                    <t t-if="state.labRunning">Scanning...</t>
+                    <t t-else="">Run Live Scan</t>
+                </button>
+                <button class="securec-refresh-btn" t-on-click="clearLab">Clear</button>
+            </div>
+            <div t-if="state.labError" class="securec-api-warning"><t t-esc="state.labError"/></div>
+
+            <div t-if="state.labResult" class="securec-lab-result">
+                <div><b>Decision:</b> <span t-att-class="'decision-badge ' + (state.labResult.decision || 'allow')"><t t-esc="(state.labResult.decision || 'allow').toUpperCase()"/></span></div>
+                <div><b>Risk Score:</b> <t t-esc="Math.round((state.labResult.risk_score || 0) * 100) + '%'"/></div>
+                <div><b>Explanation:</b> <t t-esc="state.labResult.explanation || '-'"/></div>
+                <div><b>Detected Patterns:</b> <t t-esc="(state.labResult.detected_patterns || []).join(' | ') || 'none'"/></div>
+                <div><b>LLM layer:</b>
+                    <t t-if="state.labResult.llm_used === true">augmented</t>
+                    <t t-elif="state.labResult.llm_used === false">skipped (tiered / heuristic)</t>
+                    <t t-else="">n/a</t>
+                </div>
+                <div t-if="state.labResult.decision_cache_hit"><b>Decision cache:</b> hit (duplicate payload)</div>
+                <div t-if="state.labResult.engine_note"><b>Engine note:</b> <t t-esc="state.labResult.engine_note"/></div>
+            </div>
+
+            <div class="securec-lab-grid">
+                <div class="securec-card">
+                    <h3>Attack Lab Security Logs</h3>
+                    <div t-if="state.labSecurityLogs.length">
+                        <table class="securec-table">
+                            <thead><tr><th>Timestamp</th><th>App</th><th>Risk</th><th>Decision</th><th>Patterns</th></tr></thead>
+                            <tbody>
+                                <t t-foreach="state.labSecurityLogs" t-as="l" t-key="l.timestamp + (l.module || '')">
+                                    <tr>
+                                        <td><t t-esc="formatTime(l.timestamp)"/></td>
+                                        <td><t t-esc="l.module || '-'"/></td>
+                                        <td><t t-esc="Math.round((l.risk_score || 0) * 100) + '%'"/></td>
+                                        <td><span t-att-class="'decision-badge ' + (l.decision || 'allow')"><t t-esc="(l.decision || 'allow').toUpperCase()"/></span></td>
+                                        <td><t t-esc="l.detected_patterns || '-'"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div t-else="" class="securec-empty">No security logs loaded yet.</div>
+                </div>
+                <div class="securec-card">
+                    <h3>Attack Lab Audit Logs</h3>
+                    <div t-if="state.labAuditLogs.length">
+                        <table class="securec-table">
+                            <thead><tr><th>Timestamp</th><th>Event</th><th>Status</th><th>User</th><th>Details</th></tr></thead>
+                            <tbody>
+                                <t t-foreach="state.labAuditLogs" t-as="a" t-key="a.timestamp + (a.event_type || '')">
+                                    <tr>
+                                        <td><t t-esc="formatTime(a.timestamp)"/></td>
+                                        <td><t t-esc="a.event_type || '-'"/></td>
+                                        <td><span t-att-class="'decision-badge ' + auditStatusClass(a.status)"><t t-esc="(a.status || '').toUpperCase()"/></span></td>
+                                        <td><t t-esc="a.login || '-'"/></td>
+                                        <td><t t-esc="a.details || '-'"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div t-else="" class="securec-empty">No audit logs loaded yet.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</t>
+</templates>

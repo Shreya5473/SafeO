@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Visible to all internal users (avoids "missing SecureC group" after upgrade) -->
+    <menuitem
+        id="securec_menu_root"
+        name="SafeO"
+        sequence="5"
+        action="action_securec_dashboard"
+        groups="base.group_user"/>
+
+    <menuitem
+        id="securec_menu_dashboard"
+        name="Dashboard"
+        parent="securec_menu_root"
+        action="action_securec_dashboard"
+        sequence="10"
+        groups="base.group_user"/>
+
+    <menuitem
+        id="securec_menu_attack_lab"
+        name="Live Attack Lab"
+        parent="securec_menu_root"
+        action="action_securec_attack_lab_dashboard"
+        sequence="12"
+        groups="base.group_user"/>
+
+    <menuitem
+        id="securec_menu_logs"
+        name="Security Logs"
+        parent="securec_menu_root"
+        action="action_securec_log_list"
+        sequence="20"
+        groups="base.group_user"/>
+
+    <menuitem
+        id="securec_menu_audit"
+        name="Audit Activity"
+        parent="securec_menu_root"
+        action="action_securec_audit_log_list"
+        sequence="22"
+        groups="base.group_user"/>
+
+    <menuitem
+        id="securec_menu_policies"
+        name="Compliance Policies"
+        parent="securec_menu_root"
+        action="action_securec_policy_list"
+        sequence="25"
+        groups="securec_odoo.group_securec_admin"/>
+
+    <menuitem
+        id="securec_menu_settings"
+        name="Settings"
+        parent="securec_menu_root"
+        action="base_setup.action_general_configuration"
+        sequence="30"
+        groups="securec_odoo.group_securec_admin"/>
+</odoo>
