@@ -5,7 +5,7 @@
         <field name="name">securec.log.list</field>
         <field name="model">securec.log</field>
         <field name="arch" type="xml">
-            <tree string="Security Audit Logs"
+            <tree string="Security Audit Logs" create="false" edit="false"
                   decoration-danger="risk_level == 'high'"
                   decoration-warning="risk_level == 'medium'"
                   decoration-success="risk_level == 'low'"
