@@ -205,6 +205,30 @@ class CrmLead(models.Model):
                 pass
 
             if decision == 'block':
+                # Write the security log in a SEPARATE cursor so it is committed
+                # BEFORE the outer transaction is rolled back by UserError.
+                try:
+                    with self.env.registry.cursor() as new_cr:
+                        new_env = self.env(cr=new_cr)
+                        new_env['securec.log'].sudo().create({
+                            'input_text':        input_text[:1000],
+                            'risk_score':        risk_score,
+                            'decision':          'block',
+                            'explanation':       explanation,
+                            'detected_patterns': ', '.join(patterns),
+                            'sanitized_text':    sanitized,
+                            'user_id':           self.env.uid,
+                            'module':            'CRM',
+                            'detected_language': language,
+                            'normalized_text':   normalized if normalized != input_text else False,
+                            'policy_id':         policy.id if policy else False,
+                            'policy_region':     policy.region if policy else False,
+                            'policy_decision_reason': policy_decision_reason or False,
+                        })
+                        # new_cr context-manager auto-commits on clean exit
+                except Exception as log_exc:
+                    _logger.warning("SecureC CRM: separate-cursor log write failed: %s", log_exc)
+
                 lang_info = f"[{language.upper()}]" if language != 'en' else ''
                 raise UserError(
                     f"🛡️ SecureC blocked this input {lang_info}\n\n"

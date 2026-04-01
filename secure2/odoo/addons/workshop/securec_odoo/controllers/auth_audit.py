@@ -22,32 +22,32 @@ def _safe_log_event(values):
         _logger.debug("SecureC audit event logging skipped: %s", exc)
 
 
-class SecureCHomeAudit(Home):
-    @http.route("/web/login", type="http", auth="none", readonly=False)
-    def web_login(self, redirect=None, **kw):
-        method = request.httprequest.method
-        attempted_login = kw.get("login") or request.params.get("login")
-        route = request.httprequest.path
-        user_agent = request.httprequest.headers.get("User-Agent")
-
-        response = super().web_login(redirect=redirect, **kw)
-
-        if method == "POST":
-            success = bool(request.params.get("login_success"))
-            uid = request.session.uid if success and request.session.uid else False
-            _safe_log_event({
-                "event_type": "login_success" if success else "login_failed",
-                "application": "Authentication",
-                "status": "success" if success else "failed",
-                "user_id": uid,
-                "login": attempted_login,
-                "route": route,
-                "http_method": "POST",
-                "ip_address": _client_ip(),
-                "user_agent": user_agent,
-                "details": "Authentication via /web/login",
-            })
-        return response
+# class SecureCHomeAudit(Home):
+#     @http.route("/web/login", type="http", auth="none", readonly=False)
+#     def web_login(self, redirect=None, **kw):
+#         method = request.httprequest.method
+#         attempted_login = kw.get("login") or request.params.get("login")
+#         route = request.httprequest.path
+#         user_agent = request.httprequest.headers.get("User-Agent")
+# 
+#         response = super().web_login(redirect=redirect, **kw)
+# 
+#         if method == "POST":
+#             success = bool(request.params.get("login_success"))
+#             uid = request.session.uid if success and request.session.uid else False
+#             _safe_log_event({
+#                 "event_type": "login_success" if success else "login_failed",
+#                 "application": "Authentication",
+#                 "status": "success" if success else "failed",
+#                 "user_id": uid,
+#                 "login": attempted_login,
+#                 "route": route,
+#                 "http_method": "POST",
+#                 "ip_address": _client_ip(),
+#                 "user_agent": user_agent,
+#                 "details": "Authentication via /web/login",
+#             })
+#         return response
 
 
 class SecureCSessionAudit(Session):

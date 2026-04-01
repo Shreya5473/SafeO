@@ -27,7 +27,7 @@
                        decoration-warning="decision == 'warn'"
                        decoration-info="decision == 'sanitize'"
                        decoration-success="decision == 'allow'"/>
-                <button name="action_sync_to_jira" string="Sync to SCRUM-1" type="object" class="oe_highlight" icon="fa-share-square-o"/>
+                <button name="action_sync_to_jira" title="Jira Ticket ID" string="Sync to SCRUM-1" type="object" class="oe_highlight" icon="fa-share-square-o"/>
             </tree>
         </field>
     </record>

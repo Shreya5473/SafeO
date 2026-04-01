@@ -5,6 +5,7 @@ import requests
 
 from odoo import models
 from odoo.http import request
+from odoo.exceptions import AccessError
 
 from .securec_language import build_language_payload
 
@@ -22,9 +23,11 @@ class IrHttpSecureCMonitor(models.AbstractModel):
     def _dispatch(cls, endpoint):
         response = super()._dispatch(endpoint)
         try:
-            cls._securec_monitor_request()
-        except Exception as exc:
-            _logger.debug("SecureC global monitor skipped: %s", exc)
+            # Only monitor noteworthy requests to avoid performance/recursion issues.
+            if request.httprequest.method in {"POST", "PUT", "PATCH"}:
+                cls._securec_monitor_request()
+        except (AccessError, Exception) as exc:
+            _logger.debug("SafeC global monitor skipped: %s", exc)
         return response
 
     @classmethod

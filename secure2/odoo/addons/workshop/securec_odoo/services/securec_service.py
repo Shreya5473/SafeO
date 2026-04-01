@@ -222,8 +222,31 @@ class SecureCService:
             # 4. Update user profile
             self._update_user_profile(self.env.user.id, decision, risk_score, norm_module, event.id)
 
-            # 5. Raise on block
+            # 5. Raise on block — but FIRST commit the security log in a NEW, INDEPENDENT
+            #    cursor so it is persisted BEFORE the outer transaction is rolled back by
+            #    the UserError.  This is the standard Odoo pattern for "write-then-rollback"
+            #    scenarios (e.g. sending emails after a failed payment).
             if raise_on_block and decision == 'block':
+                try:
+                    registry = self.env.registry
+                    with registry.cursor() as new_cr:
+                        new_env = self.env(cr=new_cr)
+                        new_env['securec.log'].sudo().create({
+                            'input_text':        request_data.get('input_text', '')[:1000],
+                            'risk_score':        risk_score,
+                            'decision':          'block',
+                            'explanation':       explanation,
+                            'detected_patterns': ', '.join(patterns) if patterns else '',
+                            'user_id':           self.env.uid,
+                            'module':            norm_module,
+                        })
+                        # The context-manager commits new_cr on clean exit —
+                        # this write survives even if the outer transaction rolls back.
+                except Exception as log_exc:
+                    _logger.warning(
+                        "SecureC: separate-cursor security log write failed: %s", log_exc
+                    )
+
                 raise UserError(_(
                     "🛡️ SecureC blocked this operation.\n\n"
                     "Risk Score: %(score)s%%  |  Decision: BLOCK\n\n"
