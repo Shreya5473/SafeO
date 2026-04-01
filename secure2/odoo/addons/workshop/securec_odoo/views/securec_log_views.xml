@@ -28,6 +28,7 @@
                        decoration-info="decision == 'sanitize'"
                        decoration-success="decision == 'allow'"/>
                 <field name="jira_ticket_id" optional="show"/>
+                <button name="action_sync_to_jira" type="object" string="Sync to Jira" icon="fa-share-square-o"/>
             </tree>
         </field>
     </record>

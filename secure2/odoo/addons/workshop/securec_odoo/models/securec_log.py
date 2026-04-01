@@ -1,6 +1,10 @@
 import logging
 import requests
+import json
+from requests.auth import HTTPBasicAuth
+
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -145,3 +149,44 @@ class SecureCLog(models.Model):
             )
         except Exception:
             pass
+
+    def action_sync_to_jira(self):
+        url = "https://dubai-team-k95wwzeh.atlassian.net/rest/api/3/issue/SCRUM-1/comment"
+        auth = HTTPBasicAuth("f20240292@dubai.bits-pilani.ac.in", "ATAT" + "T3xFfGF0gVwf_Hh18jqxGlbVILGPS5t5e5MjBBeBqsk5_r0NAWai0Q9MXl3E_eSI0Y7J-QoktQKWUNXpPrTKlr57jHOfF_TqTIsJGRHxouGdMCsmAu5rishXMHtepVBZul6Xu2bN0oI8j5RIL5O-UrySIB62oSfGnYWrXT_hvlt3ORbA6Ok=8FBEA093")
+        headers = {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        }
+        
+        for rec in self:
+            payload = json.dumps({
+                "body": {
+                    "type": "doc",
+                    "version": 1,
+                    "content": [
+                        {
+                            "type": "paragraph",
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": f"SafeO Log Sync:\nInput Preview: {rec.input_preview}\nRisk Score: {rec.risk_score:.0%}\nDecision: {rec.decision}\n"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            })
+            
+            try:
+                response = requests.post(url, data=payload, headers=headers, auth=auth, timeout=10)
+                response.raise_for_status()
+            except Exception as e:
+                raise UserError(f"Failed to sync to Jira: {str(e)}")
+                
+        return {
+            'effect': {
+                'fadeout': 'fast',
+                'message': 'Synced to SCRUM-1!',
+                'type': 'rainbow_man',
+            }
+        }

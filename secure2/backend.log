@@ -221,3 +221,46 @@ INFO:     Finished server process [38867]
 INFO:     Started server process [39356]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'odoo/addons/workshop/securec_odoo/controllers/auth_audit.py', 'odoo/addons/workshop/securec_odoo/controllers/main.py', 'odoo/addons/workshop/securec_odoo/controllers/__init__.py', 'odoo/addons/workshop/securec_odoo/controllers/website_waf.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [39356]
+INFO:     Started server process [40766]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:58046 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58049 - "GET /metrics HTTP/1.1" 307 Temporary Redirect
+INFO:     127.0.0.1:58049 - "GET /metrics/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58078 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58079 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58080 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58083 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58086 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58101 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58102 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58113 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58114 - "GET /metrics HTTP/1.1" 307 Temporary Redirect
+INFO:     127.0.0.1:58114 - "GET /metrics/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58121 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58137 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58140 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58145 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58146 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58149 - "POST /waf/input HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'odoo/addons/workshop/securec_odoo/models/securec_log.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [40766]
+INFO:     Started server process [41963]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'odoo/addons/workshop/securec_odoo/models/securec_log.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [41963]
+INFO:     Started server process [42563]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
