@@ -169,3 +169,55 @@ INFO:     127.0.0.1:56531 - "POST /waf/input HTTP/1.1" 200 OK
 INFO:     127.0.0.1:56533 - "POST /waf/input HTTP/1.1" 200 OK
 INFO:     127.0.0.1:56534 - "POST /waf/input HTTP/1.1" 200 OK
 INFO:     127.0.0.1:56536 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57478 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57482 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57484 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57485 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57498 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57498 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57498 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57498 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57498 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57518 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57520 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57521 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57530 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57566 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57571 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57572 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57575 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57710 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57713 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57750 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57756 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57778 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57789 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57794 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57801 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57807 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57813 - "POST /waf/input HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'odoo/addons/workshop/securec_odoo/controllers/main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [23308]
+INFO:     Started server process [36823]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:57888 - "POST /waf/input HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'odoo/addons/workshop/securec_odoo/controllers/auth_audit.py', 'odoo/addons/workshop/securec_odoo/controllers/__init__.py', 'odoo/addons/workshop/securec_odoo/controllers/website_waf.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [36823]
+INFO:     Started server process [38867]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'odoo/addons/workshop/securec_odoo/controllers/__init__.py', 'odoo/addons/workshop/securec_odoo/controllers/website_waf.py', 'odoo/addons/workshop/securec_odoo/controllers/main.py', 'odoo/addons/workshop/securec_odoo/controllers/auth_audit.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [38867]
+INFO:     Started server process [39356]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
