@@ -264,3 +264,12 @@ INFO:     Finished server process [41963]
 INFO:     Started server process [42563]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
+INFO:     127.0.0.1:58422 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58425 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58428 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58431 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58432 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58437 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58438 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58444 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58447 - "POST /waf/input HTTP/1.1" 200 OK
