@@ -6,26 +6,26 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
-                <app data-string="SecureC WAF" string="SecureC WAF" name="securec_odoo">
-                    <block title="SecureC — AI Web Application Firewall">
-                        <setting string="SecureC API Endpoint"
+                <app data-string="SafeO WAF" string="SafeO WAF" name="securec_odoo">
+                    <block title="SafeO - AI Web Application Firewall">
+                        <setting string="SafeO API Endpoint"
                                  help="URL of the FastAPI WAF backend (default: http://localhost:8001)">
                             <field name="securec_api_url"/>
                         </setting>
                         <setting string="Protected Applications"
-                                 help="Comma-separated app names shown as monitored scope in dashboard (e.g. CRM,Authentication,Website)">
+                                 help="Comma-separated app names shown as monitored scope in dashboard">
                             <field name="securec_monitored_apps"/>
                         </setting>
                         <setting string="Block Threshold"
-                                 help="Risk score (0–1) that triggers a full block (default: 0.70)">
+                                 help="Risk score (0 to 1) that triggers a full block (default: 0.70)">
                             <field name="securec_block_threshold"/>
                         </setting>
                         <setting string="Warn Threshold"
-                                 help="Risk score (0–1) that triggers a warning (default: 0.30)">
+                                 help="Risk score (0 to 1) that triggers a warning (default: 0.30)">
                             <field name="securec_warn_threshold"/>
                         </setting>
                         <setting string="Illustrative AED per WAF block (dashboard)"
-                                 help="Hackathon metric: today’s block count × this value = estimated exposure signal (not real financial loss).">
+                                 help="Today's block count x this value = estimated exposure signal (not real financial loss).">
                             <field name="securec_estimated_exposure_aed_per_block"/>
                         </setting>
                     </block>
@@ -59,7 +59,7 @@
 
                     <block title="Jira Integration">
                         <setting string="Jira Base URL"
-                                 help="e.g. https://yourorg.atlassian.net — auto-creates tickets for high-risk threats">
+                                 help="e.g. https://yourorg.atlassian.net - auto-creates tickets for high-risk threats">
                             <field name="securec_jira_url"/>
                         </setting>
                         <setting string="Jira User Email">
@@ -73,9 +73,9 @@
                         </setting>
                     </block>
 
-                    <block title="Region &amp; Compliance Policy">
+                    <block title="Region and Compliance Policy">
                         <setting string="Active Compliance Policy"
-                                 help="Select a regional policy (UAE, EU, US, Global) to govern block thresholds, PII masking, and logging requirements. Overrides the global block threshold above.">
+                                 help="Select a regional policy (UAE, EU, US, Global) to govern block thresholds, PII masking, and logging requirements.">
                             <field name="securec_active_policy_id"
                                    options="{'no_create': True}"/>
                         </setting>

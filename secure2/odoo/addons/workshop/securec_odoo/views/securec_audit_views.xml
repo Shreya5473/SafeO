@@ -4,7 +4,7 @@
         <field name="name">securec.audit.log.list</field>
         <field name="model">securec.audit.log</field>
         <field name="arch" type="xml">
-            <list string="Security Activity Audit" default_order="timestamp desc"
+            <tree string="Security Activity Audit" default_order="timestamp desc"
                   decoration-danger="status == 'failed' or status == 'blocked'"
                   decoration-warning="status == 'warning'"
                   decoration-success="status == 'success'">
@@ -20,7 +20,7 @@
                 <field name="detected_language" optional="show"/>
                 <field name="policy_region" optional="show"/>
                 <field name="ip_address" optional="hide"/>
-            </list>
+            </tree>
         </field>
     </record>
 
@@ -84,7 +84,7 @@
     <record id="action_securec_audit_log_list" model="ir.actions.act_window">
         <field name="name">Audit Activity</field>
         <field name="res_model">securec.audit.log</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_securec_audit_log_search"/>
     </record>
 </odoo>

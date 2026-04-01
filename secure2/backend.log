@@ -1,0 +1,39 @@
+INFO:     Will watch for changes in these directories: ['/Users/sunil/Desktop/SafeO/secure2']
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [5977] using WatchFiles
+INFO:     Started server process [6026]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:50229 - "GET /health HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'odoo/addons/workshop/securec_odoo/__manifest__.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [6026]
+INFO:     Started server process [6588]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'odoo/addons/workshop/securec_odoo/controllers/main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [6588]
+INFO:     Started server process [7589]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'odoo/addons/workshop/securec_odoo/controllers/auth_audit.py', 'odoo/addons/workshop/securec_odoo/controllers/main.py', 'odoo/addons/workshop/securec_odoo/controllers/__init__.py', 'odoo/addons/workshop/securec_odoo/controllers/website_waf.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [7589]
+INFO:     Started server process [8595]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'odoo/addons/workshop/securec_odoo/__manifest__.py', 'odoo/addons/workshop/securec_odoo/controllers/main.py', 'odoo/addons/workshop/securec_odoo/controllers/auth_audit.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [8595]
+INFO:     Started server process [20739]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.

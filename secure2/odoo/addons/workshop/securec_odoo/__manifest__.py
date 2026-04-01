@@ -1,6 +1,6 @@
 {
     'name': 'SafeO (SecureC) — AI Web Application Firewall',
-    'version': '19.0.2.6.0',
+    'version': '17.0.2.6.0',
     'category': 'Security',
     'summary': 'SafeO: AI-native WAF with tiered LLM gating, decision cache, multi-region policies, EN/AR/Arabizi',
     'description': """
