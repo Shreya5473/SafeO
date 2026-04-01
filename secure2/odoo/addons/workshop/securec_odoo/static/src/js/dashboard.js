@@ -2,7 +2,6 @@
 
 import { Component, useState, onWillStart, onMounted } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 
 const EMPTY_METRICS = {
@@ -35,6 +34,7 @@ class SecureCDashboard extends Component {
     setup() {
         // Odoo 19+: there is no "rpc" service — use @web/core/network/rpc
         this.notification = useService("notification");
+        this.rpc = useService("rpc");
 
         this.state = useState({
             metrics: { ...EMPTY_METRICS },
@@ -77,13 +77,13 @@ class SecureCDashboard extends Component {
     async loadData() {
         // Never fail the whole screen if one endpoint errors (Odoo would look like a blank redirect)
         const [mRes, lRes, pRes, cRes, aRes, polRes, fRes] = await Promise.allSettled([
-            rpc("/securec/metrics", {}),
-            rpc("/securec/logs", {}),
-            rpc("/securec/active_policy", {}),
-            rpc("/securec/context", {}),
-            rpc("/securec/audit_logs", {}),
-            rpc("/securec/policies", {}),
-            rpc("/securec/activity_feed", { limit: 40 }),
+            this.rpc("/securec/metrics", {}),
+            this.rpc("/securec/logs", {}),
+            this.rpc("/securec/active_policy", {}),
+            this.rpc("/securec/context", {}),
+            this.rpc("/securec/audit_logs", {}),
+            this.rpc("/securec/policies", {}),
+            this.rpc("/securec/activity_feed", { limit: 40 }),
         ]);
         if (mRes.status === "fulfilled" && mRes.value) {
             this.state.metrics = { ...EMPTY_METRICS, ...mRes.value };
@@ -135,7 +135,7 @@ class SecureCDashboard extends Component {
         this.state.simulation = null;
         this.state.simError = "";
         try {
-            const result = await rpc("/securec/simulate", {});
+            const result = await this.rpc("/securec/simulate", {});
             if (result?.error) {
                 const msg = String(result.error);
                 this.state.simError = msg;
@@ -295,7 +295,7 @@ class SecureCDashboard extends Component {
         this.state.selectedPolicyId = policyId;
         if (!policyId) return;
         try {
-            const res = await rpc("/securec/active_policy/set", { policy_id: policyId });
+            const res = await this.rpc("/securec/active_policy/set", { policy_id: policyId });
             if (res?.error) {
                 this.notification.add(res.error, { type: "warning", title: "SafeO Policy" });
                 return;
@@ -350,7 +350,7 @@ class SecureCDashboard extends Component {
         this.state.labError = "";
         this.state.labResult = null;
         try {
-            const data = await rpc("/securec/attack_lab/run", {
+            const data = await this.rpc("/securec/attack_lab/run", {
                 input_text: payload,
                 module: "AttackLab",
             });

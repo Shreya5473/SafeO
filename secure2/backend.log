@@ -139,3 +139,20 @@ INFO:     127.0.0.1:53255 - "POST /waf/input HTTP/1.1" 200 OK
 INFO:     127.0.0.1:53258 - "POST /waf/input HTTP/1.1" 200 OK
 INFO:     127.0.0.1:53263 - "POST /waf/input HTTP/1.1" 200 OK
 INFO:     127.0.0.1:53293 - "POST /waf/input HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'odoo/addons/workshop/securec_odoo/__manifest__.py', 'odoo/addons/workshop/securec_odoo/controllers/__init__.py', 'odoo/addons/workshop/securec_odoo/controllers/main.py', 'odoo/addons/workshop/securec_odoo/models/__init__.py', 'odoo/addons/workshop/securec_odoo/models/securec_mixin.py', 'odoo/addons/workshop/securec_odoo/models/securec_event.py', 'odoo/addons/workshop/securec_odoo/services/securec_service.py', 'odoo/addons/workshop/securec_odoo/models/crm_lead.py', 'odoo/addons/workshop/securec_odoo/controllers/auth_audit.py', 'odoo/addons/workshop/securec_odoo/models/securec_settings.py', 'odoo/addons/workshop/securec_odoo/services/__init__.py', 'odoo/addons/workshop/securec_odoo/models/securec_audit_log.py', 'odoo/addons/workshop/securec_odoo/__init__.py', 'odoo/addons/workshop/securec_odoo/models/securec_agent_log.py', 'odoo/addons/workshop/securec_odoo/models/securec_policy.py', 'odoo/addons/workshop/securec_odoo/models/ir_http_monitor.py', 'odoo/addons/workshop/securec_odoo/models/securec_attack_simulation.py', 'odoo/addons/workshop/securec_odoo/models/securec_log.py', 'odoo/addons/workshop/securec_odoo/models/securec_mail_hook.py', 'odoo/addons/workshop/securec_odoo/models/securec_user_profile.py', 'odoo/addons/workshop/securec_odoo/controllers/website_waf.py', 'odoo/addons/workshop/securec_odoo/models/securec_language.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [20739]
+INFO:     Started server process [23308]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:56297 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56312 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56313 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56322 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56323 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56344 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56348 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56350 - "POST /waf/input HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56351 - "POST /waf/input HTTP/1.1" 200 OK
