@@ -4,6 +4,8 @@ import { Component, useState, onWillStart, onMounted } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
+    console.log("SafeO: Initializing WAF dashboard module...");
+
 const EMPTY_METRICS = {
     total_requests: 0,
     blocked_count: 0,
@@ -28,7 +30,7 @@ const EMPTY_METRICS = {
     timeline_note: "",
 };
 
-class SecureCDashboard extends Component {
+export class SecureCDashboard extends Component {
     static template = "securec_odoo.Dashboard";
 
     setup() {
@@ -424,3 +426,5 @@ class SecureCDashboard extends Component {
 }
 
 registry.category("actions").add("securec_dashboard", SecureCDashboard);
+console.log("SafeO: Successfully registered securec_dashboard!");
+
